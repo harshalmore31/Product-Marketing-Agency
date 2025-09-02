@@ -38,13 +38,13 @@ print("\n--- Creating Product Profile ---")
 profile_created = agency.create_product_profile(product_data)
 
 if profile_created:
-    print(f"✓ Product profile created: {product_data['product_name']}")
+    print(f"Product profile created: {product_data['product_name']}")
     print(f"  Product ID: {agency.current_product['product_id']}")
     print(f"  Category: {agency.current_product['category']}")
     print(f"  Features: {len(agency.current_product['key_features'])} key features")
     print(f"  Suggested images: {agency.current_product['suggested_image_types']}")
 else:
-    print("✗ Failed to create product profile")
+    print("Failed to create product profile")
     exit(1)
 
 # Generate marketing images
@@ -54,7 +54,7 @@ results = agency.run_campaign()
 # Output the results
 print("\n--- Campaign Results ---")
 if results["success"]:
-    print(f"✓ Campaign completed successfully!")
+    print(f"Campaign completed successfully!")
     print(f"  Images generated: {results['images_generated']}")
     print(f"  Total time: {results['total_time']:.2f} seconds")
     
@@ -70,14 +70,14 @@ if results["success"]:
     print("\n--- Campaign Metrics ---")
     print(json.dumps(results["execution_metrics"], indent=2))
 else:
-    print(f"✗ Campaign failed: {results.get('error', 'Unknown error')}")
+    print(f"Campaign failed: {results.get('error', 'Unknown error')}")
 
 # Save campaign report (optional)
 try:
     agency.save_campaign_report()
-    print("\n✓ Campaign report saved to output/campaign_reports/")
+    print("\nCampaign report saved to output/campaign_reports/")
 except Exception as e:
-    print(f"\n✗ Error saving report: {e}")
+    print(f"\nError saving report: {e}")
 
 # Example of generating a single image type
 print("\n--- Generating Single Image Example ---")
@@ -87,6 +87,6 @@ single_image = agency.generate_single_image(
 )
 
 if single_image["success"]:
-    print(f"✓ Single image generated: {single_image['image_path']}")
+    print(f"Single image generated: {single_image['image_path']}")
 else:
-    print(f"✗ Failed to generate image: {single_image.get('error', 'Unknown error')}")
+    print(f"Failed to generate image: {single_image.get('error', 'Unknown error')}")

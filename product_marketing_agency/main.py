@@ -303,7 +303,7 @@ class ProductMarketingAgency:
         current_time = time.time()
         if base64_hash in tracked_hashes:
             last_seen = tracked_hashes[base64_hash]
-            self.logger.error(f"🚨 DUPLICATE BASE64 DETECTED! Hash: {base64_hash[:16]}...")
+            self.logger.error(f"ALERT: DUPLICATE BASE64 DETECTED! Hash: {base64_hash[:16]}...")
             self.logger.error(f"   Previous generation: {time.ctime(last_seen)}")
             self.logger.error(f"   Time difference: {current_time - last_seen:.2f} seconds")
             return True
@@ -324,7 +324,7 @@ class ProductMarketingAgency:
         except IOError as e:
             self.logger.warning(f"Could not save base64 tracking file: {e}")
         
-        self.logger.info(f"✅ Unique base64 confirmed. Hash: {base64_hash[:16]}... (Total tracked: {len(tracked_hashes)})")
+        self.logger.info(f"Ready Unique base64 confirmed. Hash: {base64_hash[:16]}... (Total tracked: {len(tracked_hashes)})")
         return False
 
     def _convert_base64_to_file(self, base64_data: str, output_dir: Path, filename_prefix: str) -> Optional[str]:
@@ -890,7 +890,7 @@ class ProductMarketingAgency:
         ]
         
         for num, img_type, description in image_options:
-            suggested_marker = "[bold green]★ SUGGESTED[/bold green]" if suggested_types and num in suggested_types else ""
+            suggested_marker = "[bold green]SUGGESTED[/bold green]" if suggested_types and num in suggested_types else ""
             image_name = img_type.name.replace('_', ' ').title()
             image_table.add_row(
                 str(num), 
@@ -903,7 +903,7 @@ class ProductMarketingAgency:
         console.print(image_table)
         
         if suggested_types:
-            suggestion_text = Text(f"★ Suggested types for this product: {suggested_types}", style="bold yellow")
+            suggestion_text = Text(f"Suggested types for this product: {suggested_types}", style="bold yellow")
             console.print("\n")
             console.print(Panel(suggestion_text, border_style="yellow"))
         
@@ -915,7 +915,7 @@ class ProductMarketingAgency:
                     choice_num = int(choice)
                     selected_type = ImageType(choice_num)
                     type_name = selected_type.name.replace('_', ' ').title()
-                    console.print(f"\n[bold green]✓ Selected: {type_name}[/bold green]")
+                    console.print(f"\n[bold green]Selected: {type_name}[/bold green]")
                     return selected_type
                 else:
                     console.print("[red]Please enter a number between 1 and 10.[/red]")
@@ -1041,13 +1041,13 @@ class ProductMarketingAgency:
                             f"[END_UNIQUE_CONTEXT]\n" \
                             f"IMPORTANT: Generate the actual image, do not provide text explanations."
             
-            self.logger.info(f"🚀 Starting FRESH image generation for Step_{image_type.value} with unique ID: {unique_id}")
-            self.logger.info(f"🔥 Enhanced API-level cache busting: {api_cache_buster}")
-            self.logger.info(f"📏 Prompt length: {len(enhanced_prompt)} characters")
+            self.logger.info(f"Starting Starting FRESH image generation for Step_{image_type.value} with unique ID: {unique_id}")
+            self.logger.info(f"Enhanced Enhanced API-level cache busting: {api_cache_buster}")
+            self.logger.info(f"Prompt length: {len(enhanced_prompt)} characters")
             
             # 🆕 CREATE FRESH AGENT FOR THIS REQUEST - PREVENTS GOOGLE API CACHING
             fresh_agent = self._create_fresh_image_agent()
-            self.logger.info(f"🔄 Created fresh agent: {fresh_agent.agent_name} (Temp: {fresh_agent.temperature:.3f})")
+            self.logger.info(f"Created Created fresh agent: {fresh_agent.agent_name} (Temp: {fresh_agent.temperature:.3f})")
             
             # Run the FRESH image generation agent with enhanced cache busting
             if master_image_path and os.path.exists(master_image_path):
@@ -1055,10 +1055,10 @@ class ProductMarketingAgency:
                     task=enhanced_prompt,
                     img=master_image_path
                 )
-                self.logger.info(f"✨ Generated Step_{image_type.value} with master image reference using FRESH agent (ID: {unique_id})")
+                self.logger.info(f"Generated Step_{image_type.value} with master image reference using FRESH agent (ID: {unique_id})")
             else:
                 result = fresh_agent.run(task=enhanced_prompt)
-                self.logger.info(f"✨ Generated Step_{image_type.value} without master image using FRESH agent (ID: {unique_id})")
+                self.logger.info(f"Generated Step_{image_type.value} without master image using FRESH agent (ID: {unique_id})")
             
             # Log response details for debugging
             result_str = str(result)
@@ -1092,12 +1092,12 @@ class ProductMarketingAgency:
                 
                 # Display success message with Rich
                 success_panel = Panel(
-                    f"[bold green]🎉 IMAGE SUCCESSFULLY GENERATED AND SAVED![/bold green]\n\n"
-                    f"📁 Location: {meaningful_path}\n"
-                    f"🎨 Image Type: {image_type.name.replace('_', ' ').title()}\n"
-                    f"📦 Product: {product_profile.product_name}\n"
-                    f"⏰ Generated: {timestamp}",
-                    title="[bold cyan]📸 Image Generation Complete[/bold cyan]",
+                    f"[bold green]SUCCESS: IMAGE SUCCESSFULLY GENERATED AND SAVED![/bold green]\n\n"
+                    f"Location: {meaningful_path}\n"
+                    f"Image Type: {image_type.name.replace('_', ' ').title()}\n"
+                    f"Product: {product_profile.product_name}\n"
+                    f"Generated: {timestamp}",
+                    title="[bold cyan]Image Generation Complete[/bold cyan]",
                     border_style="green",
                     expand=False
                 )
@@ -1120,11 +1120,11 @@ class ProductMarketingAgency:
                     extracted_base64 = match.group(0)
                     self.logger.info(f"Successfully extracted base64 data URI: {len(extracted_base64)} characters")
                     
-                    # 🚨 GLOBAL DUPLICATE DETECTION - Check against all previous generations
+                    # ALERT: GLOBAL DUPLICATE DETECTION - Check against all previous generations
                     is_duplicate = self._track_base64_globally(extracted_base64)
                     if is_duplicate:
-                        self.logger.error(f"❌ DUPLICATE BASE64 CONTENT! This exact image was generated before!")
-                        self.logger.error(f"💡 This indicates Google API caching issue - fresh agent creation may need adjustment")
+                        self.logger.error(f"DUPLICATE BASE64 CONTENT! This exact image was generated before!")
+                        self.logger.error(f"Note: This indicates Google API caching issue - fresh agent creation may need adjustment")
                         # Continue processing but log the issue for analysis
                     
                     filename_prefix = f"{product_profile.product_name.replace(' ', '_')}_Step_{image_type.value}_{timestamp}_{unique_id}"
@@ -1138,13 +1138,13 @@ class ProductMarketingAgency:
                     if converted_image_path:
                         # Display success message with Rich
                         success_panel = Panel(
-                            f"[bold green]🎉 BASE64 IMAGE CONVERTED AND SAVED![/bold green]\n\n"
-                            f"📁 Location: {converted_image_path}\n"
-                            f"🎨 Image Type: {image_type.name.replace('_', ' ').title()}\n"
-                            f"📦 Product: {product_profile.product_name}\n"
-                            f"🔑 Unique ID: {unique_id}\n"
-                            f"⏰ Generated: {timestamp}",
-                            title="[bold cyan]📸 Base64 Conversion Complete[/bold cyan]",
+                            f"[bold green]SUCCESS: BASE64 IMAGE CONVERTED AND SAVED![/bold green]\n\n"
+                            f"Location: {converted_image_path}\n"
+                            f"Image Type: {image_type.name.replace('_', ' ').title()}\n"
+                            f"Product: {product_profile.product_name}\n"
+                            f"Unique ID: {unique_id}\n"
+                            f"Generated: {timestamp}",
+                            title="[bold cyan]Image Generation Complete[/bold cyan]",
                             border_style="green",
                             expand=False
                         )
@@ -1164,11 +1164,11 @@ class ProductMarketingAgency:
                 # Found pure base64 image data - convert it to file
                 self.logger.info("Detected pure base64 image data, converting to file...")
                 
-                # 🚨 GLOBAL DUPLICATE DETECTION - Check against all previous generations
+                # ALERT: GLOBAL DUPLICATE DETECTION - Check against all previous generations
                 is_duplicate = self._track_base64_globally(result_str.strip())
                 if is_duplicate:
-                    self.logger.error(f"❌ DUPLICATE BASE64 CONTENT! This exact image was generated before!")
-                    self.logger.error(f"💡 This indicates Google API caching issue - fresh agent creation may need adjustment")
+                    self.logger.error(f"DUPLICATE BASE64 CONTENT! This exact image was generated before!")
+                    self.logger.error(f"Note: This indicates Google API caching issue - fresh agent creation may need adjustment")
                     # Continue processing but log the issue for analysis
                 
                 filename_prefix = f"{product_profile.product_name.replace(' ', '_')}_Step_{image_type.value}_{timestamp}_{unique_id}"
@@ -1182,13 +1182,13 @@ class ProductMarketingAgency:
                 if converted_image_path:
                     # Display success message with Rich
                     success_panel = Panel(
-                        f"[bold green]🎉 BASE64 IMAGE CONVERTED AND SAVED![/bold green]\n\n"
-                        f"📁 Location: {converted_image_path}\n"
-                        f"🎨 Image Type: {image_type.name.replace('_', ' ').title()}\n"
-                        f"📦 Product: {product_profile.product_name}\n"
-                        f"🔑 Unique ID: {unique_id}\n"
-                        f"⏰ Generated: {timestamp}",
-                        title="[bold cyan]📸 Base64 Conversion Complete[/bold cyan]",
+                        f"[bold green]SUCCESS: BASE64 IMAGE CONVERTED AND SAVED![/bold green]\n\n"
+                        f"Location: {converted_image_path}\n"
+                        f"Image Type: {image_type.name.replace('_', ' ').title()}\n"
+                        f"Product: {product_profile.product_name}\n"
+                        f"Unique ID: {unique_id}\n"
+                        f"Generated: {timestamp}",
+                        title="[bold cyan]Image Generation Complete[/bold cyan]",
                         border_style="green",
                         expand=False
                     )
@@ -1219,11 +1219,11 @@ class ProductMarketingAgency:
             
             # Show warning panel
             warning_panel = Panel(
-                f"[bold yellow]⚠️ UNEXPECTED RESPONSE FORMAT[/bold yellow]\n\n"
+                f"[bold yellow]WARNING UNEXPECTED RESPONSE FORMAT[/bold yellow]\n\n"
                 f"Could not process the agent's response as an image.\n"
                 f"Debug information saved to: {output_path}\n"
                 f"Response length: {len(result_str)} characters",
-                title="[bold bright_yellow]🔧 Debug Info[/bold bright_yellow]",
+                title="[bold bright_yellow]Debug Info[/bold bright_yellow]",
                 border_style="bright_yellow",
                 expand=False
             )
@@ -1339,7 +1339,7 @@ class ProductMarketingAgency:
                 TextColumn("[bold blue]{task.description}"),
                 console=console
             ) as progress:
-                task1 = progress.add_task("🔥 STEP 1: Analyzing Product Information...", total=1)
+                task1 = progress.add_task("Enhanced STEP 1: Analyzing Product Information...", total=1)
                 product_profile = self.create_product_profile(product_data)
                 progress.update(task1, completed=1)
             print(f" Product Profile Created: {product_profile.product_name}")
@@ -1369,7 +1369,7 @@ class ProductMarketingAgency:
             
             for i, image_type in enumerate(image_types, 1):
                 image_name = image_type.name.replace('_', ' ').title()
-                print(f"\n⚡ STEP 3.{i}: Generating {image_name}...")
+                print(f"\nSTEP 3.{i}: Generating {image_name}...")
                 
                 # Create marketing job
                 job = MarketingJob(
@@ -1546,7 +1546,7 @@ class ProductMarketingAgency:
 def display_welcome_banner():
     """Display welcome banner with Rich styling"""
     # Create main title
-    title = Text("🚀 PRODUCT MARKETING AGENCY", style="bold magenta")
+    title = Text("Starting PRODUCT MARKETING AGENCY", style="bold magenta")
     subtitle = Text("Multi-Agent System", style="bold cyan")
     
     # Create feature list
@@ -1554,11 +1554,11 @@ def display_welcome_banner():
     features_table.add_column(style="bright_blue bold")
     features_table.add_column(style="white")
     
-    features_table.add_row("⚡", "6 Specialized AI Agents")
-    features_table.add_row("📸", "10 Marketing Image Types")
-    features_table.add_row("🔄", "Interactive & Batch Processing")
-    features_table.add_row("🎨", "Visual Consistency Management")
-    features_table.add_row("📊", "Comprehensive Feedback System")
+    features_table.add_row("*", "6 Specialized AI Agents")
+    features_table.add_row("Image Generation Complete", "10 Marketing Image Types")
+    features_table.add_row("Created", "Interactive & Batch Processing")
+    features_table.add_row("Image Type:", "Visual Consistency Management")
+    features_table.add_row("CAMPAIGN STATISTICS", "Comprehensive Feedback System")
     
     # Create powered by text
     powered_by = Text("Powered by Swarms Framework | Advanced AI Marketing Content Generation", style="dim italic")
@@ -1584,7 +1584,7 @@ def display_welcome_banner():
 def get_product_information_interactive() -> Dict[str, Any]:
     """Smart product information parser that handles unstructured bulk input"""
     # Rich styled header
-    title = Text("🚀 PRODUCT MARKETING AGENCY", style="bold magenta")
+    title = Text("Starting PRODUCT MARKETING AGENCY", style="bold magenta")
     subtitle = Text("Information Setup", style="bold cyan")
     
     header_panel = Panel(
@@ -1597,26 +1597,26 @@ def get_product_information_interactive() -> Dict[str, Any]:
     console.print(header_panel)
     
     # Create information requirements table
-    req_table = Table(title="[bold green]📋 REQUIRED INFORMATION[/bold green]")
+    req_table = Table(title="[bold green]REQUIRED INFORMATION[/bold green]")
     req_table.add_column("Field", style="green bold")
     req_table.add_column("Description", style="white")
     
-    req_table.add_row("✅ Product Name", "The name of your product")
-    req_table.add_row("✅ Product Category", "Electronics, Fashion, Food, etc.")
-    req_table.add_row("✅ Product Description", "Brief description of the product")
-    req_table.add_row("✅ Key Features", "Main features (list with dashes)")
-    req_table.add_row("✅ Target Audience", "Who will buy this product")
+    req_table.add_row("Ready Product Name", "The name of your product")
+    req_table.add_row("Ready Product Category", "Electronics, Fashion, Food, etc.")
+    req_table.add_row("Ready Product Description", "Brief description of the product")
+    req_table.add_row("Ready Key Features", "Main features (list with dashes)")
+    req_table.add_row("Ready Target Audience", "Who will buy this product")
     
     # Create optional information table
-    opt_table = Table(title="[bold yellow]📝 OPTIONAL INFORMATION[/bold yellow]")
+    opt_table = Table(title="[bold yellow]OPTIONAL INFORMATION[/bold yellow]")
     opt_table.add_column("Field", style="yellow bold")
     opt_table.add_column("Description", style="white")
     
-    opt_table.add_row("🎨 Brand Colors", "Hex codes or color names")
-    opt_table.add_row("💰 Price Range", "e.g., $50-100 or $299")
+    opt_table.add_row("Image Type: Brand Colors", "Hex codes or color names")
+    opt_table.add_row("Price Range: Price Range", "e.g., $50-100 or $299")
     opt_table.add_row("⭐ Unique Selling Points", "What makes it special")
-    opt_table.add_row("📐 Custom Requirements", "Any special requirements")
-    opt_table.add_row("🖼️ Master Image Path", "Path to reference image")
+    opt_table.add_row("Custom Requirements: Custom Requirements", "Any special requirements")
+    opt_table.add_row("Master Image: Master Image Path", "Path to reference image")
     
     console.print("\n")
     console.print(req_table)
@@ -1624,7 +1624,7 @@ def get_product_information_interactive() -> Dict[str, Any]:
     console.print(opt_table)
     
     # Smart input panel
-    smart_input_text = Text("💡 SMART INPUT: Paste everything in any format - AI will understand!", style="bold blue")
+    smart_input_text = Text("Note: SMART INPUT: Paste everything in any format - AI will understand!", style="bold blue")
     smart_panel = Panel(
         Align.center(smart_input_text),
         border_style="blue",
@@ -1656,7 +1656,7 @@ Master Reference Image Path: /path/to/image.jpg"""
     example_syntax = Syntax(example_text, "yaml", theme="monokai", line_numbers=False)
     example_panel = Panel(
         example_syntax,
-        title="[bold cyan]📥 EXAMPLE INPUT FORMAT[/bold cyan]",
+        title="[bold cyan]EXAMPLE INPUT FORMAT[/bold cyan]",
         border_style="cyan"
     )
     
@@ -1665,7 +1665,7 @@ Master Reference Image Path: /path/to/image.jpg"""
     
     # Input instruction panel
     input_instruction = Panel(
-        "[bold white]📝 PASTE YOUR PRODUCT INFORMATION BELOW:[/bold white]\n[dim](Press Enter twice when finished)[/dim]",
+        "[bold white]PASTE YOUR PRODUCT INFORMATION BELOW:[/bold white]\n[dim](Press Enter twice when finished)[/dim]",
         border_style="white",
         box=box.SIMPLE
     )
@@ -1691,18 +1691,18 @@ Master Reference Image Path: /path/to/image.jpg"""
         except EOFError:
             break
         except KeyboardInterrupt:
-            console.print("\n[red]❌ Input cancelled by user.[/red]")
+            console.print("\n[red]Input cancelled by user.[/red]")
             return get_product_information_interactive()
     
     # Join all lines into one text for intelligent parsing
     full_text = ' '.join(lines).strip()
     
     if not full_text:
-        console.print("\n[red]❌ No input received. Please try again.[/red]")
+        console.print("\n[red]No input received. Please try again.[/red]")
         return get_product_information_interactive()
     
     # Analysis status with Rich
-    with Status(f"[bold green]🔍 Analyzing your input ({len(full_text)} characters)...", console=console) as status:
+    with Status(f"[bold green]Analyzing Analyzing your input ({len(full_text)} characters)...", console=console) as status:
         status.update("[bold blue]🤖 AI Agent is extracting structured information...")
         time.sleep(1)
     
@@ -1781,18 +1781,18 @@ Master Reference Image Path: /path/to/image.jpg"""
                     'master_image_path': str(parsed_data.get('master_image_path', '')).strip()
                 }
                 
-                console.print("[bold green]✅ AI parsing successful![/bold green]")
+                console.print("[bold green]Ready AI parsing successful![/bold green]")
                 
             except json.JSONDecodeError:
-                console.print("[yellow]⚠️ AI response format issue, using fallback parsing...[/yellow]")
+                console.print("[yellow]WARNING AI response format issue, using fallback parsing...[/yellow]")
                 product_data = fallback_manual_parsing(full_text)
         else:
-            console.print("[yellow]⚠️ No JSON found in AI response, using fallback parsing...[/yellow]")
+            console.print("[yellow]WARNING No JSON found in AI response, using fallback parsing...[/yellow]")
             product_data = fallback_manual_parsing(full_text)
             
     except Exception as e:
-        console.print(f"[red]⚠️ AI parsing failed: {str(e)}[/red]")
-        console.print("[yellow]🔧 Using fallback manual parsing...[/yellow]")
+        console.print(f"[red]WARNING AI parsing failed: {str(e)}[/red]")
+        console.print("[yellow]Debug Info Using fallback manual parsing...[/yellow]")
         product_data = fallback_manual_parsing(full_text)
     
     # Set defaults for empty fields
@@ -1808,13 +1808,13 @@ Master Reference Image Path: /path/to/image.jpg"""
         product_data['master_image_path'] = ""
     
     # Display parsed information using Rich table
-    info_table = Table(title="[bold green]📊 EXTRACTED PRODUCT INFORMATION[/bold green]")
+    info_table = Table(title="[bold green]EXTRACTED PRODUCT INFORMATION[/bold green]")
     info_table.add_column("Field", style="cyan bold", width=20)
     info_table.add_column("Value", style="white")
     
-    info_table.add_row("📦 Name", product_data.get('name', 'N/A'))
-    info_table.add_row("🏷️ Category", product_data.get('category', 'N/A'))
-    info_table.add_row("📝 Description", product_data.get('description', 'N/A'))
+    info_table.add_row("Product: Name", product_data.get('name', 'N/A'))
+    info_table.add_row("Category: Category", product_data.get('category', 'N/A'))
+    info_table.add_row("PASTE YOUR PRODUCT INFORMATION BELOW: Description", product_data.get('description', 'N/A'))
     
     # Features handling
     features = product_data.get('features', [])
@@ -1822,18 +1822,18 @@ Master Reference Image Path: /path/to/image.jpg"""
         features_display = "\n".join([f"{i}. {feature}" for i, feature in enumerate(features[:3], 1)])
         if len(features) > 3:
             features_display += f"\n... and {len(features) - 3} more features"
-        info_table.add_row(f"⚙️ Features ({len(features)})", features_display)
+        info_table.add_row(f"SETTINGS Features ({len(features)})", features_display)
     else:
-        info_table.add_row("⚙️ Features", "None specified")
+        info_table.add_row("SETTINGS Features", "None specified")
     
-    info_table.add_row("👥 Target Audience", product_data.get('target_audience', 'N/A'))
+    info_table.add_row("Target Audience: Target Audience", product_data.get('target_audience', 'N/A'))
     
     # Brand colors
     if product_data.get('brand_colors'):
         colors_str = ', '.join(product_data['brand_colors'])
-        info_table.add_row("🎨 Brand Colors", colors_str)
+        info_table.add_row("Image Type: Brand Colors", colors_str)
     
-    info_table.add_row("💰 Price Range", product_data.get('price_range', 'N/A'))
+    info_table.add_row("Price Range: Price Range", product_data.get('price_range', 'N/A'))
     
     # USPs handling
     usps = product_data.get('usp', [])
@@ -1845,10 +1845,10 @@ Master Reference Image Path: /path/to/image.jpg"""
     
     # Optional fields
     if product_data.get('custom_requirements'):
-        info_table.add_row("📐 Custom Requirements", product_data['custom_requirements'])
+        info_table.add_row("Custom Requirements: Custom Requirements", product_data['custom_requirements'])
     
     if product_data.get('master_image_path'):
-        info_table.add_row("🖼️ Master Image", product_data['master_image_path'])
+        info_table.add_row("Master Image: Master Image", product_data['master_image_path'])
     
     console.print("\n")
     console.print(info_table)
@@ -1859,7 +1859,7 @@ Master Reference Image Path: /path/to/image.jpg"""
     
     if not missing_fields:
         success_panel = Panel(
-            "[bold green]🎉 ALL REQUIRED INFORMATION SUCCESSFULLY EXTRACTED![/bold green]\n[green]✅ Ready to generate marketing content![/green]",
+            "[bold green]SUCCESS: ALL REQUIRED INFORMATION SUCCESSFULLY EXTRACTED![/bold green]\n[green]Ready Ready to generate marketing content![/green]",
             border_style="green",
             box=box.ROUNDED
         )
@@ -1867,7 +1867,7 @@ Master Reference Image Path: /path/to/image.jpg"""
         console.print(success_panel)
         return product_data
     else:
-        warning_text = f"⚠️ MISSING INFORMATION: {', '.join(missing_fields)}\nThe system can still work with incomplete information."
+        warning_text = f"WARNING MISSING INFORMATION: {', '.join(missing_fields)}\nThe system can still work with incomplete information."
         warning_panel = Panel(
             warning_text,
             title="[yellow]Warning[/yellow]",
@@ -1878,10 +1878,10 @@ Master Reference Image Path: /path/to/image.jpg"""
         
         confirm = Confirm.ask("\n[bold cyan]🤔 Proceed with available information?[/bold cyan]")
         if confirm:
-            console.print("[green]✅ Proceeding with available information...[/green]")
+            console.print("[green]Ready Proceeding with available information...[/green]")
             return product_data
         else:
-            console.print("[yellow]🔄 Please provide the information again with missing details.[/yellow]")
+            console.print("[yellow]Created Please provide the information again with missing details.[/yellow]")
             return get_product_information_interactive()
 
 
@@ -2023,7 +2023,7 @@ def fallback_manual_parsing(text: str) -> Dict[str, Any]:
 #                     master_img = master_img_path
 #                     print(f"✅ Master image found: {master_img_path}")
 #                 elif master_img_path:
-#                     print(f"⚠️  Master image not found: {master_img_path}")
+#                     print(f"Master image not found: {master_img_path}")
                 
 #                 results = agency.run_marketing_campaign(
 #                     product_data=product_data,
@@ -2092,18 +2092,18 @@ def fallback_manual_parsing(text: str) -> Dict[str, Any]:
                     
 #                     profile = agency.load_product_profile(profile_id)
 #                     if profile:
-#                         console.print(f"\n[bold green]✓ Loaded profile: {profile.product_name}[/bold green]")
+#                         console.print(f"\n[bold green]Loaded profile: {profile.product_name}[/bold green]")
 #                         # Continue with campaign using existing profile...
 #                     else:
-#                         console.print("[red]❌ Profile not found.[/red]")
+#                         console.print("[red]Profile not found.[/red]")
 #                 else:
-#                     console.print("\n[yellow]⚠️ No existing profiles found.[/yellow]")
+#                     console.print("\n[yellow]No existing profiles found.[/yellow]")
                 
 #             elif choice == "4":
 #                 # Statistics
 #                 stats = agency.get_campaign_statistics()
 #                 # Create statistics table
-#                 stats_table = Table(title="[bold cyan]📊 CAMPAIGN STATISTICS[/bold cyan]")
+#                 stats_table = Table(title="[bold cyan]CAMPAIGN STATISTICS CAMPAIGN STATISTICS[/bold cyan]")
 #                 stats_table.add_column("Metric", style="green bold")
 #                 stats_table.add_column("Value", style="white")
                 
